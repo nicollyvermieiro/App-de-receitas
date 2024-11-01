@@ -1,0 +1,18 @@
+{
+    "name": "vendor/app_receitas",
+    "description": "criar e publicar receitas",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Vendor\\AppReceitas\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "nicollyVermieiro"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^11.4"
+    }
+}
