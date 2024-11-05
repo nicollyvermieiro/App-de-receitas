@@ -10,6 +10,9 @@ O Aplicativo de Receitas é uma plataforma interativa que permite aos usuários 
 ## Público-Alvo
 O público-alvo inclui amantes da culinária, cozinheiros iniciantes e experientes, e qualquer pessoa que busca novas ideias para suas refeições.
 
+## ER - Diagrama
+![Diagrama ER](images/ER_diagram.png)
+
 ## Tecnologias Utilizadas
 - **Backend**: PHP (puro)
 - **Frontend**: 
