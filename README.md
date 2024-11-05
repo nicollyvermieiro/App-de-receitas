@@ -4,8 +4,8 @@
 O Aplicativo de Receitas é uma plataforma interativa que permite aos usuários compartilhar, buscar e descobrir novas receitas. O objetivo é criar uma comunidade de amantes da culinária, onde todos possam contribuir com suas criações e encontrar inspiração para suas refeições.
 
 ## Recursos Principais
+- **Cadastro de usuário**: Realizar login para publicar receitas.
 - **Cadastro de Receitas**: Usuários podem criar e publicar suas receitas com ingredientes, instruções e fotos.
-- **Busca e Filtros**: Busque receitas por nome, ingredientes ou categorias (como sobremesas, pratos principais, etc.).
 
 ## Público-Alvo
 O público-alvo inclui amantes da culinária, cozinheiros iniciantes e experientes, e qualquer pessoa que busca novas ideias para suas refeições.
