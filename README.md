@@ -13,7 +13,7 @@ O público-alvo inclui amantes da culinária, cozinheiros iniciantes e experient
 ## Tecnologias Utilizadas
 - **Backend**: PHP (puro)
 - **Frontend**: 
-  - Bootstrap para a interface responsiva
+  - CSS, JS, HTML
 
 ## Dependências
 - PHP 8.0 ou superior
