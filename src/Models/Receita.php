@@ -2,6 +2,7 @@
 namespace Vendor\AppReceitas\Models;
 
 use PDO;
+use PDOException;
 use Vendor\AppReceitas\Config\DB;
 
 class Receita {
@@ -93,74 +94,92 @@ class Receita {
     // Métodos CRUD
 
     public function salvar() {
-        $stmt = $this->conn->prepare("INSERT INTO receitas (usuario_id, titulo, ingredientes, instrucoes, modo_preparo, foto, dataCriacao) 
-                                     VALUES (:usuario_id, :titulo, :ingredientes, :instrucoes, :modo_preparo, :foto, :dataCriacao)");
-        $stmt->bindParam(':usuario_id', $this->usuario_id);
-        $stmt->bindParam(':titulo', $this->titulo);
-        $stmt->bindParam(':ingredientes', $this->ingredientes);
-        $stmt->bindParam(':instrucoes', $this->instrucoes);
-        $stmt->bindParam(':modo_preparo', $this->modo_preparo); 
-        $stmt->bindParam(':foto', $this->foto);
-        $stmt->bindParam(':dataCriacao', $this->dataCriacao);
-        $stmt->execute();
+        try {
+            $stmt = $this->conn->prepare("INSERT INTO receitas (usuario_id, titulo, ingredientes, instrucoes, modo_preparo, foto, dataCriacao) 
+                                         VALUES (:usuario_id, :titulo, :ingredientes, :instrucoes, :modo_preparo, :foto, :dataCriacao)");
+            $stmt->bindParam(':usuario_id', $this->usuario_id);
+            $stmt->bindParam(':titulo', $this->titulo);
+            $stmt->bindParam(':ingredientes', $this->ingredientes);
+            $stmt->bindParam(':instrucoes', $this->instrucoes);
+            $stmt->bindParam(':modo_preparo', $this->modo_preparo); 
+            $stmt->bindParam(':foto', $this->foto);
+            $stmt->bindParam(':dataCriacao', $this->dataCriacao);
+            $stmt->execute();
 
-        $this->id = $this->conn->lastInsertId(); 
+            $this->id = $this->conn->lastInsertId(); 
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Erro ao salvar a receita: " . $e->getMessage()]);
+        }
     }
 
     public static function find($id) {
-        $conn = DB::getConnection(); 
-        $stmt = $conn->prepare("SELECT * FROM receitas WHERE id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        try {
+            $conn = DB::getConnection(); 
+            $stmt = $conn->prepare("SELECT * FROM receitas WHERE id = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
 
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($data) {
-            $receita = new Receita($data['usuario_id'], $data['titulo'], $data['ingredientes'], $data['instrucoes'], $data['modo_preparo'], $data['foto']);
-            $receita->setId($data['id']);
-            $receita->setDataCriacao($data['dataCriacao']);
-            return $receita;
+            if ($data) {
+                $receita = new Receita($data['usuario_id'], $data['titulo'], $data['ingredientes'], $data['instrucoes'], $data['modo_preparo'], $data['foto']);
+                $receita->setId($data['id']);
+                $receita->setDataCriacao($data['dataCriacao']);
+                return $receita;
+            }
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Erro ao buscar a receita: " . $e->getMessage()]);
         }
-
         return null; 
     }
 
     public function atualizar() {
-        $stmt = $this->conn->prepare("UPDATE receitas SET titulo = :titulo, ingredientes = :ingredientes, instrucoes = :instrucoes, modo_preparo = :modo_preparo, foto = :foto WHERE id = :id");
-        $stmt->bindParam(':titulo', $this->titulo);
-        $stmt->bindParam(':ingredientes', $this->ingredientes);
-        $stmt->bindParam(':instrucoes', $this->instrucoes);
-        $stmt->bindParam(':modo_preparo', $this->modo_preparo); 
-        $stmt->bindParam(':foto', $this->foto);
-        $stmt->bindParam(':id', $this->id);
-        $stmt->execute();
+        try {
+            $stmt = $this->conn->prepare("UPDATE receitas SET titulo = :titulo, ingredientes = :ingredientes, instrucoes = :instrucoes, modo_preparo = :modo_preparo, foto = :foto WHERE id = :id");
+            $stmt->bindParam(':titulo', $this->titulo);
+            $stmt->bindParam(':ingredientes', $this->ingredientes);
+            $stmt->bindParam(':instrucoes', $this->instrucoes);
+            $stmt->bindParam(':modo_preparo', $this->modo_preparo); 
+            $stmt->bindParam(':foto', $this->foto);
+            $stmt->bindParam(':id', $this->id);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Erro ao atualizar a receita: " . $e->getMessage()]);
+        }
     }
 
     public function deletar() {
-        $stmt = $this->conn->prepare("DELETE FROM receitas WHERE id = :id");
-        $stmt->bindParam(':id', $this->id);
-        $stmt->execute();
+        try {
+            $stmt = $this->conn->prepare("DELETE FROM receitas WHERE id = :id");
+            $stmt->bindParam(':id', $this->id);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Erro ao excluir a receita: " . $e->getMessage()]);
+        }
     }
 
     public static function listarTodas() {
-        $conn = DB::getConnection();
-        $stmt = $conn->query("SELECT * FROM receitas");
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $conn = DB::getConnection();
+            $stmt = $conn->query("SELECT * FROM receitas");
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $receitas = [];
-        foreach ($result as $row) {
-            $receita = new Receita();
-            $receita->setId($row['id']);
-            $receita->setUsuarioId($row['usuario_id']);
-            $receita->setTitulo($row['titulo']);
-            $receita->setIngredientes($row['ingredientes']);
-            $receita->setInstrucoes($row['instrucoes']);
-            $receita->setModoPreparo($row['modo_preparo']); 
-            $receita->setFoto($row['foto']);
-            $receita->setDataCriacao($row['dataCriacao']);
-            $receitas[] = $receita;
+            $receitas = [];
+            foreach ($result as $row) {
+                $receita = new Receita();
+                $receita->setId($row['id']);
+                $receita->setUsuarioId($row['usuario_id']);
+                $receita->setTitulo($row['titulo']);
+                $receita->setIngredientes($row['ingredientes']);
+                $receita->setInstrucoes($row['instrucoes']);
+                $receita->setModoPreparo($row['modo_preparo']); 
+                $receita->setFoto($row['foto']);
+                $receita->setDataCriacao($row['dataCriacao']);
+                $receitas[] = $receita;
+            }
+            return $receitas;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Erro ao listar as receitas: " . $e->getMessage()]);
         }
-
-        return $receitas;
     }
 }

@@ -15,7 +15,7 @@ class User {
     public function __construct($nome = null, $email = null, $senha = null) {
         $this->nome = $nome;
         $this->email = $email;
-        $this->senha = password_hash($senha, PASSWORD_DEFAULT); 
+        $this->senha = $senha ? password_hash($senha, PASSWORD_BCRYPT) : null;
         $this->dataCriacao = date("Y-m-d H:i:s");
         $this->conn = DB::getConnection(); 
     }
@@ -49,7 +49,7 @@ class User {
     }
 
     public function setSenha($senha) {
-        $this->senha = password_hash($senha, PASSWORD_BCRYPT);  
+        $this->senha = password_hash($senha, PASSWORD_BCRYPT);
     }
 
     public function getDataCriacao() {
@@ -60,8 +60,6 @@ class User {
         $this->dataCriacao = $dataCriacao;
     }
 
-    // Métodos CRUD
-
     public function salvar() {
         $stmt = $this->conn->prepare("INSERT INTO usuarios (nome, email, senha, dataCriacao) VALUES (:nome, :email, :senha, :dataCriacao)");
         $stmt->bindParam(':nome', $this->nome);
@@ -70,7 +68,7 @@ class User {
         $stmt->bindParam(':dataCriacao', $this->dataCriacao);
         $stmt->execute();
 
-        $this->id = $this->conn->lastInsertId(); 
+        $this->id = $this->conn->lastInsertId();
     }
 
     public static function autenticar($email, $senha) {
@@ -78,15 +76,17 @@ class User {
         $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
         $stmt->bindParam(':email', $email);
         $stmt->execute();
+
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($senha, $user['senha'])) {
-            $userObj = new User($user['nome'], $user['email'], $user['senha']);
+            $userObj = new User($user['nome'], $user['email']);
             $userObj->setId($user['id']);
+            $userObj->setDataCriacao($user['dataCriacao']);
             return $userObj;
         }
 
-        return null; 
+        return null;
     }
 
     public static function find($id) {
@@ -98,7 +98,7 @@ class User {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            $userObj = new User($user['nome'], $user['email'], $user['senha']);
+            $userObj = new User($user['nome'], $user['email']);
             $userObj->setId($user['id']);
             $userObj->setDataCriacao($user['dataCriacao']);
             return $userObj;
@@ -121,7 +121,7 @@ class User {
         $stmt->bindParam(':id', $this->id);
         $stmt->execute();
     }
-    
+
     public static function listarTodos() {
         $conn = DB::getConnection();
         $stmt = $conn->prepare("SELECT * FROM usuarios");
@@ -143,4 +143,23 @@ class User {
 
         return $usuarios;
     }
+
+    public static function findByEmail($email) {
+        $conn = DB::getConnection();
+        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $userObj = new User($user['nome'], $user['email']);
+            $userObj->setId($user['id']);
+            $userObj->setDataCriacao($user['dataCriacao']);
+            return $userObj;
+        }
+
+        return null;
+    }
 }
+

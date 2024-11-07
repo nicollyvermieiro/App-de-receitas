@@ -5,7 +5,7 @@ use Vendor\AppReceitas\Models\Receita;
 
 class ReceitaController {
 
-    public function index() {
+    public function list() {
         $receitas = Receita::listarTodas(); 
 
         if ($receitas) {
@@ -15,7 +15,7 @@ class ReceitaController {
         }
     }
 
-    public function store() {
+    public function create() {
         $data = json_decode(file_get_contents("php://input"), true);
     
         if (empty($data['titulo']) || empty($data['ingredientes']) || empty($data['instrucoes']) || empty($data['modo_preparo'])) {
@@ -23,14 +23,14 @@ class ReceitaController {
             return;
         }
 
-        $usuario_id = 1;
+        $usuario_id = 1; 
 
         $receita = new Receita(
             $usuario_id, 
             $data['titulo'], 
             $data['ingredientes'], 
             $data['instrucoes'], 
-            $data['modo_preparo'], // Aqui o campo foi adicionado
+            $data['modo_preparo'], 
             $data['foto'] ?? null
         );
         $receita->salvar(); 
@@ -60,14 +60,14 @@ class ReceitaController {
         if (!empty($data['titulo'])) $receita->setTitulo($data['titulo']);
         if (!empty($data['ingredientes'])) $receita->setIngredientes($data['ingredientes']);
         if (!empty($data['instrucoes'])) $receita->setInstrucoes($data['instrucoes']);
-        if (!empty($data['modo_preparo'])) $receita->setModoPreparo($data['modo_preparo']); // Atualização do campo
+        if (!empty($data['modo_preparo'])) $receita->setModoPreparo($data['modo_preparo']); 
         if (isset($data['foto'])) $receita->setFoto($data['foto']);
 
         $receita->atualizar(); 
         echo json_encode(["message" => "Receita atualizada com sucesso"]);
     }
 
-    public function destroy($id) {
+    public function delete($id) {
         $receita = Receita::find($id);
 
         if ($receita) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendor\AppReceitas\Config;
+namespace Vendor\AppReceitas\Routes;
 
 class Router {
 
