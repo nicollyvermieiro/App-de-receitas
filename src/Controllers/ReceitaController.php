@@ -1,43 +1,80 @@
 <?php
-namespace App\Controllers;
-use App\Models\Receita;
+namespace Vendor\AppReceitas\Controllers;
+
+use Vendor\AppReceitas\Models\Receita;
 
 class ReceitaController {
+
     public function index() {
-        $receitas = Receita::all(); // Pega todas as receitas
-        include '../app/Views/receitas/index.php';
+        $receitas = Receita::listarTodas(); 
+
+        if ($receitas) {
+            echo json_encode($receitas);  
+        } else {
+            echo json_encode(["error" => "Nenhuma receita encontrada"]); 
+        }
     }
 
-    public function create() {
-        include '../app/Views/receitas/create.php';
-    }
+    public function store() {
+        $data = json_decode(file_get_contents("php://input"), true);
+    
+        if (empty($data['titulo']) || empty($data['ingredientes']) || empty($data['instrucoes']) || empty($data['modo_preparo'])) {
+            echo json_encode(["error" => "Todos os campos são obrigatórios"]);
+            return;
+        }
 
-    public function store($dados) {
-        $receita = new Receita();
-        $receita->titulo = $dados['titulo'];
-        $receita->ingredientes = $dados['ingredientes'];
-        $receita->instrucoes = $dados['instrucoes'];
-        $receita->save();
+        $usuario_id = 1;
+
+        $receita = new Receita(
+            $usuario_id, 
+            $data['titulo'], 
+            $data['ingredientes'], 
+            $data['instrucoes'], 
+            $data['modo_preparo'], // Aqui o campo foi adicionado
+            $data['foto'] ?? null
+        );
+        $receita->salvar(); 
+        echo json_encode(["message" => "Receita criada com sucesso"]);
     }
 
     public function show($id) {
         $receita = Receita::find($id);
-        include '../app/Views/receitas/show.php';
+        
+        if ($receita) {
+            echo json_encode($receita);
+        } else {
+            echo json_encode(["error" => "Receita não encontrada"]);
+        }
     }
 
-    public function edit($id) {
-        $receita = Receita::find($id);
-        include '../app/Views/receitas/edit.php';
-    }
+    public function update($id) {
+        $data = json_decode(file_get_contents("php://input"), true);
 
-    public function update($id, $dados) {
         $receita = Receita::find($id);
-        $receita->update($dados);
+
+        if (!$receita) {
+            echo json_encode(["error" => "Receita não encontrada"]);
+            return;
+        }
+
+        if (!empty($data['titulo'])) $receita->setTitulo($data['titulo']);
+        if (!empty($data['ingredientes'])) $receita->setIngredientes($data['ingredientes']);
+        if (!empty($data['instrucoes'])) $receita->setInstrucoes($data['instrucoes']);
+        if (!empty($data['modo_preparo'])) $receita->setModoPreparo($data['modo_preparo']); // Atualização do campo
+        if (isset($data['foto'])) $receita->setFoto($data['foto']);
+
+        $receita->atualizar(); 
+        echo json_encode(["message" => "Receita atualizada com sucesso"]);
     }
 
     public function destroy($id) {
         $receita = Receita::find($id);
-        $receita->delete();
+
+        if ($receita) {
+            $receita->deletar(); 
+            echo json_encode(["message" => "Receita excluída com sucesso"]);
+        } else {
+            echo json_encode(["error" => "Receita não encontrada"]);
+        }
     }
 }
-?>

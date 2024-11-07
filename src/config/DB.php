@@ -1,16 +1,29 @@
 <?php
-$host = 'localhost';
-$user = 'root';
-$password = ''; 
-$dbname = 'receitas'; 
+namespace Vendor\AppReceitas\Config;
 
-$conn = new mysqli($host, $user, $password, $dbname);
+use PDO;
+use PDOException;
 
-if ($conn->connect_error) {
-    die("Falha na conexão: " . $conn->connect_error);
-} else {
-    echo "Conexão bem-sucedida ao banco de dados!";
+class DB {
+    private static $conn;
+
+    private function __construct() {} 
+
+    public static function getConnection() {
+        if (!self::$conn) {
+            $host = 'localhost';
+            $dbname = 'receitas';
+            $user = 'root';
+            $password = '';
+
+            try {
+                self::$conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $password);
+                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                die("Erro na conexão: " . $e->getMessage());
+            }
+        }
+
+        return self::$conn;
+    }
 }
-
-$conn->close();
-?>
