@@ -10,7 +10,7 @@ class Receita {
     private $usuario_id;
     private $titulo;
     private $ingredientes;
-    private $descricao; // Alterado para descricao
+    private $descricao; 
     private $modo_preparo; 
     private $foto;
     private $dataCriacao;
@@ -20,7 +20,7 @@ class Receita {
         $this->usuario_id = $usuario_id;
         $this->titulo = $titulo;
         $this->ingredientes = $ingredientes;
-        $this->descricao = $descricao; // Alterado para descricao
+        $this->descricao = $descricao; 
         $this->modo_preparo = $modo_preparo; 
         $this->foto = $foto;
         $this->dataCriacao = date("Y-m-d H:i:s"); 
@@ -28,11 +28,11 @@ class Receita {
     }
 
     public function getDescricao() {
-        return $this->descricao; // Alterado para descricao
+        return $this->descricao;
     }
 
     public function setDescricao($descricao) {
-        $this->descricao = $descricao; // Alterado para descricao
+        $this->descricao = $descricao; 
     }
 
     public function getModoPreparo() {
@@ -100,7 +100,7 @@ class Receita {
             $stmt->bindParam(':usuario_id', $this->usuario_id);
             $stmt->bindParam(':titulo', $this->titulo);
             $stmt->bindParam(':ingredientes', $this->ingredientes);
-            $stmt->bindParam(':descricao', $this->descricao); // Alterado para descricao
+            $stmt->bindParam(':descricao', $this->descricao); 
             $stmt->bindParam(':modo_preparo', $this->modo_preparo); 
             $stmt->bindParam(':foto', $this->foto);
             $stmt->bindParam(':dataCriacao', $this->dataCriacao);
@@ -138,7 +138,7 @@ class Receita {
             $stmt = $this->conn->prepare("UPDATE receitas SET titulo = :titulo, ingredientes = :ingredientes, descricao = :descricao, modo_preparo = :modo_preparo, foto = :foto WHERE id = :id");
             $stmt->bindParam(':titulo', $this->titulo);
             $stmt->bindParam(':ingredientes', $this->ingredientes);
-            $stmt->bindParam(':descricao', $this->descricao); // Alterado para descricao
+            $stmt->bindParam(':descricao', $this->descricao); 
             $stmt->bindParam(':modo_preparo', $this->modo_preparo); 
             $stmt->bindParam(':foto', $this->foto);
             $stmt->bindParam(':id', $this->id);
@@ -171,7 +171,7 @@ class Receita {
                 $receita->setUsuarioId($row['usuario_id']);
                 $receita->setTitulo($row['titulo']);
                 $receita->setIngredientes($row['ingredientes']);
-                $receita->setDescricao($row['descricao']); // Alterado para descricao
+                $receita->setDescricao($row['descricao']); 
                 $receita->setModoPreparo($row['modo_preparo']); 
                 $receita->setFoto($row['foto']);
                 $receita->setDataCriacao($row['dataCriacao']);

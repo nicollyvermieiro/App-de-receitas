@@ -12,10 +12,10 @@ class UserController {
             if ($usuarios) {
                 echo json_encode($usuarios);  
             } else {
-                echo json_encode(["error" => "Nenhum usuário encontrado"]); 
+                echo json_encode(["error" => "Nenhum usuario encontrado"]); 
             }
         } catch (\Exception $e) {
-            echo json_encode(["error" => "Erro ao listar usuários: " . $e->getMessage()]);
+            echo json_encode(["error" => "Erro ao listar usuarios: " . $e->getMessage()]);
         }
     }
 

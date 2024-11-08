@@ -1,5 +1,5 @@
 <?php
-namespace Vendor\AppReceitas\src\Config;
+namespace Vendor\AppReceitas\Config;
 
 use PDO;
 use PDOException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendor\AppReceitas\Routes;
+namespace Vendor\AppReceitas\routes;
 
 class Router {
 
@@ -23,10 +23,17 @@ class Router {
     
         foreach ($this->routes as $route) {
             if ($route['method'] === $method && $route['uri'] === $uri) {
-                list($controller, $action) = explode('@', $route['action']);
-                
+                // Verifique se o action é um array e extraia o controller e action
+                if (is_array($route['action'])) {
+                    list($controller, $action) = $route['action'];
+                } else {
+                    echo json_encode(["error" => "Formato de ação inválido"]);
+                    http_response_code(500);
+                    return;
+                }
+    
                 $controller = "Vendor\\AppReceitas\\Controllers\\" . $controller;
-                
+    
                 if (class_exists($controller)) {
                     $controllerInstance = new $controller();
     
@@ -49,4 +56,4 @@ class Router {
         http_response_code(404);
         echo json_encode(["error" => "Rota não encontrada"]);
     }
-}    
+}

@@ -1,9 +1,10 @@
 <?php
 
-use Vendor\AppReceitas\Routes\Router;
+use Vendor\AppReceitas\routes\Router;
 
 require '../src/Controllers/ReceitaController.php';
 require '../src/Controllers/UserController.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $router = new Router();
 
