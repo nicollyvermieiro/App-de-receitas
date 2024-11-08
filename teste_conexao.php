@@ -1,7 +1,7 @@
 <?php
 require_once 'src/Config/DB.php'; 
 
-use Vendor\AppReceitas\src\Config\DB;
+use Vendor\AppReceitas\Config\DB;
 
 try {
     $conexao = DB::getConnection();
