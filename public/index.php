@@ -1,9 +1,11 @@
 <?php
 
-require '../App-de-receitas/src/Controllers/ReceitaController.php';
-require '../App-de-receitas/src/Controllers/UserController.php';
+use Vendor\AppReceitas\Routes\Router;
 
-$router = new Vendor\AppReceitas\Routes\Router();
+require '../src/Controllers/ReceitaController.php';
+require '../src/Controllers/UserController.php';
+
+$router = new Router();
 
 // Rotas de Receitas
 $router->add('GET', '/api/receitas', ['ReceitaController', 'list']);  
