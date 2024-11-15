@@ -17,21 +17,21 @@ class ReceitaController {
 
     public function create() {
         $data = json_decode(file_get_contents("php://input"), true);
-    
-        if (empty($data['titulo']) || empty($data['ingredientes']) || empty($data['instrucoes']) || empty($data['modo_preparo'])) {
-            echo json_encode(["error" => "Todos os campos são obrigatórios"]);
-            return;
-        }
+
+        // if (empty($data['titulo']) || empty($data['categoria']) || empty($data['ingredientes']) || empty($data['descricao']) || empty($data['modo_preparo']) ) {
+        //     echo json_encode(["error" => "Todos os campos são obrigatórios"]);
+        //     return;
+        // }
 
         $usuario_id = 1; 
 
         $receita = new Receita(
-            $usuario_id, 
-            $data['titulo'], 
-            $data['ingredientes'], 
-            $data['instrucoes'], 
-            $data['modo_preparo'], 
-            $data['foto'] ?? null
+            $usuario_id,
+            $data['titulo'],
+            $data['ingredientes'],
+            $data['descricao'],
+            $data['modo_preparo'],
+            $data['categoria'] ?? null
         );
         $receita->salvar(); 
         echo json_encode(["message" => "Receita criada com sucesso"]);
@@ -57,11 +57,11 @@ class ReceitaController {
             return;
         }
 
+        if (!empty($data['categoria'])) $receita->setCategoria($data['categoria']);
         if (!empty($data['titulo'])) $receita->setTitulo($data['titulo']);
         if (!empty($data['ingredientes'])) $receita->setIngredientes($data['ingredientes']);
-        if (!empty($data['instrucoes'])) $receita->setInstrucoes($data['instrucoes']);
-        if (!empty($data['modo_preparo'])) $receita->setModoPreparo($data['modo_preparo']); 
-        if (isset($data['foto'])) $receita->setFoto($data['foto']);
+        if (!empty($data['descricao'])) $receita->setDescricao($data['descricao']);
+        if (!empty($data['modo_preparo'])) $receita->setModoPreparo($data['modo_preparo']);
 
         $receita->atualizar(); 
         echo json_encode(["message" => "Receita atualizada com sucesso"]);
@@ -78,3 +78,4 @@ class ReceitaController {
         }
     }
 }
+?>

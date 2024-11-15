@@ -1,123 +1,68 @@
 <?php
-namespace Vendor\AppReceitas\Controllers;
 
-use Vendor\AppReceitas\Models\User;
+namespace App\Controllers;
+
+use App\Models\User;
 
 class UserController {
+	private $userModel;
 
-    public function list() {
-        try {
-            $usuarios = User::listarTodos(); 
+	public function __construct() {
+		$this->userModel = new User();
+	}
 
-            if ($usuarios) {
-                echo json_encode($usuarios);  
-            } else {
-                echo json_encode(["error" => "Nenhum usuario encontrado"]); 
-            }
-        } catch (\Exception $e) {
-            echo json_encode(["error" => "Erro ao listar usuarios: " . $e->getMessage()]);
+	public function index()
+    {
+        $viewPath = __DIR__ . '/../views/user/index.php';
+
+        if (file_exists($viewPath)) {
+            require $viewPath;
+        } else {
+            echo "View não encontrada: user/index.php";
         }
     }
 
-    public function create() {
-        $data = json_decode(file_get_contents("php://input"), true);
+	public function create() {
+		$data = json_decode(file_get_contents("php://input"), true);
+		$name = $data['name'] ?? null;
+		$email = $data['email'] ?? null;
+		$password = $data['password'] ?? null;
 
-        if (empty($data['nome']) || empty($data['email']) || empty($data['senha'])) {
-            echo json_encode(["error" => "Todos os campos são obrigatórios"]);
-            return;
+		if ($name && $email && $password) {
+			$result = $this->userModel->create($name, $email, $password);
+			echo json_encode(["success" => $result]);
+		} else {
+			http_response_code(400);
+			echo json_encode(["error" => "Nome e email são obrigatórios."]);
+		}
+	}
+
+	public function read($id = null) {
+		if ($id === "all") {
+            $data = $this->userModel->read();
+        } else {
+            $data = $this->userModel->read($id);
         }
+		echo json_encode($data);
+	}
 
-        if (User::findByEmail($data['email'])) {
-            echo json_encode(["error" => "Já existe um usuário com esse email"]);
-            return;
-        }
+	public function update($id) {
+		$data = json_decode(file_get_contents("php://input"), true);
+		$name = $data['name'] ?? null;
+		$email = $data['email'] ?? null;
+		$password = $data['password'] ?? null;
 
-        $data['senha'] = password_hash($data['senha'], PASSWORD_BCRYPT);
+		if ($name && $email) {
+			$result = $this->userModel->update($id, $name, $email, $password);
+			echo json_encode(["success" => $result, "message" => $result ? "Usuário atualizado com sucesso." : "Falha ao atualizar usuário."]);
+		} else {
+			http_response_code(400);
+			echo json_encode(["error" => "Nome e email são obrigatórios."]);
+		}
+	}
 
-        try {
-            $user = new User($data['nome'], $data['email'], $data['senha']);
-            $user->salvar();
-            echo json_encode(["message" => "Usuário criado com sucesso"]);
-        } catch (\Exception $e) {
-            echo json_encode(["error" => "Erro ao criar usuário: " . $e->getMessage()]);
-        }
-    }
-
-    public function login() {
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        if (empty($data['email']) || empty($data['senha'])) {
-            echo json_encode(["error" => "Email e senha são obrigatórios"]);
-            return;
-        }
-
-        try {
-            $user = User::autenticar($data['email'], $data['senha']);
-            
-            if ($user) {
-                $userData = [
-                    'id' => $user->getId(),
-                    'nome' => $user->getNome(),
-                    'email' => $user->getEmail(),
-                    'dataCriacao' => $user->getDataCriacao()
-                ];
-                echo json_encode(["message" => "Login bem-sucedido", "user" => $userData]);
-            } else {
-                echo json_encode(["error" => "Email ou senha inválidos"]);
-            }
-        } catch (\Exception $e) {
-            echo json_encode(["error" => "Erro ao realizar login: " . $e->getMessage()]);
-        }
-    }
-
-    public function show($id) {
-        try {
-            $user = User::find($id);
-            
-            if ($user) {
-                echo json_encode($user);
-            } else {
-                echo json_encode(["error" => "Usuário não encontrado"]);
-            }
-        } catch (\Exception $e) {
-            echo json_encode(["error" => "Erro ao buscar usuário: " . $e->getMessage()]);
-        }
-    }
-
-    public function update($id) {
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        try {
-            $user = User::find($id);
-
-            if (!$user) {
-                echo json_encode(["error" => "Usuário não encontrado"]);
-                return;
-            }
-
-            if (!empty($data['nome'])) $user->setNome($data['nome']);
-            if (!empty($data['email'])) $user->setEmail($data['email']);
-            if (!empty($data['senha'])) $user->setSenha(password_hash($data['senha'], PASSWORD_BCRYPT)); 
-
-            $user->atualizar();
-            echo json_encode(["message" => "Usuário atualizado com sucesso"]);
-        } catch (\Exception $e) {
-            echo json_encode(["error" => "Erro ao atualizar usuário: " . $e->getMessage()]);
-        }
-    }
-
-    public function delete($id) {
-        try {
-            $user = User::find($id);
-
-            if ($user) {
-                $user->deletar();
-                echo json_encode(["message" => "Usuário excluído com sucesso"]);
-            } else {
-                echo json_encode(["error" => "Usuário não encontrado"]);
-            }
-        } catch (\Exception $e) {
-            echo json_encode(["error" => "Erro ao excluir usuário: " . $e->getMessage()]);
-        }
-    }
+	public function delete($id) {
+		$result = $this->userModel->delete($id);
+		echo json_encode(["success" => $result, "message" => $result ? "Usuário deletado com sucesso." : "Falha ao deletar usuário."]);
+	}
 }

@@ -23,7 +23,6 @@ class Router {
     
         foreach ($this->routes as $route) {
             if ($route['method'] === $method && $route['uri'] === $uri) {
-                // Verifique se o action é um array e extraia o controller e action
                 if (is_array($route['action'])) {
                     list($controller, $action) = $route['action'];
                 } else {
