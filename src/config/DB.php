@@ -4,26 +4,29 @@ namespace Vendor\AppReceitas\Config;
 use PDO;
 use PDOException;
 
-class DB {
-    private static $conn;
+class Database {
 
-    private function __construct() {} 
+    static $host = 'localhost';
+    static $dbname = 'receitas';
+    static $user = 'root';
+    static $password = '';
 
-    public static function getConnection() {
-        if (!self::$conn) {
+    private static $instance;
+
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
             $host = 'localhost';
             $dbname = 'receitas';
             $user = 'root';
             $password = '';
 
             try {
-                self::$conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $password);
-                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$instance = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $password,[PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION]);
             } catch (PDOException $e) {
-                die("Erro na conexão: " . $e->getMessage());
+                echo "Erro na conexão: " . $e->getMessage();
             }
         }
 
-        return self::$conn;
+        return self::$instance;
     }
 }
