@@ -1,7 +1,10 @@
 <?php
-require_once '../config/db.php';
+
+namespace Vendor\AppReceitas\Models;
 
 use PDO;
+
+require_once '../config/db.php';
 
 class Receita 
 {

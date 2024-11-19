@@ -1,6 +1,9 @@
 <?php
 
+namespace Vendor\AppReceitas\Controllers;
+
 use Vendor\AppReceitas\Config\Database;
+use Vendor\AppReceitas\Models\User;
 
 class UserController 
 {

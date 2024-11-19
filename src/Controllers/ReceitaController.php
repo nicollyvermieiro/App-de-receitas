@@ -1,9 +1,10 @@
 <?php
 
+namespace Vendor\AppReceitas\Controllers;
+
 use SebastianBergmann\Environment\Console;
 use Vendor\AppReceitas\Config\Database;
-
-require_once '../Models/Receita.php';
+use Vendor\AppReceitas\Models\Receita;
 
 class ReceitaController 
 {
@@ -53,6 +54,27 @@ class ReceitaController
         if (isset($id)) {
             try {
                 $receita = $this->receita->getById($id);
+                if ($receita) {
+                    echo json_encode($receita);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Cadastro não encontrado"]);
+                }
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao buscar cadastro"]);
+            }
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
+        }
+    }
+
+    public function getByUserId($id)
+    {
+        if (isset($id)) {
+            try {
+                $receita = $this->receita->getByUserId($id);
                 if ($receita) {
                     echo json_encode($receita);
                 } else {
