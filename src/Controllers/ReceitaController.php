@@ -1,80 +1,118 @@
 <?php
-namespace Vendor\AppReceitas\Controllers;
 
-use Vendor\AppReceitas\Models\Receita;
+use SebastianBergmann\Environment\Console;
+use Vendor\AppReceitas\Config\Database;
 
-class ReceitaController {
+require_once '../Models/Receita.php';
 
-    public function list() {
-        $receitas = Receita::listarTodas(); 
+class ReceitaController 
+{
+    private $receita;
 
-        if ($receitas) {
-            echo json_encode($receitas);  
+    private static $INSTANCE;
+
+    public static function getInstance(){
+        if(!isset(self::$INSTANCE)){
+            self::$INSTANCE = new ReceitaController();
+        }
+        return self::$INSTANCE;
+    }
+
+    public function __construct()
+    {
+        $this->receita = new Receita(Database::getInstance());
+    }
+
+    public function list()
+    {
+        $receita = $this->receita->list();
+        echo json_encode($receita);
+    }
+
+    public function create() 
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (isset($data->usuario_id) && isset($data->titulo) && isset($data->ingredientes) && isset($data->descricao) && isset($data->modo_preparo) && isset($data->categoria) && isset($data->dataCriacao)) {
+            try {
+                $this->receita->create($data->usuario_id, $data->titulo, $data->ingredientes, $data->descricao, $data->modo_preparo, $data->categoria, $data->dataCriacao);
+
+                http_response_code(201);
+                echo json_encode(["message" => "Receita cadastrada com sucesso"]);
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao cadastrar receita"]);
+            }
         } else {
-            echo json_encode(["error" => "Nenhuma receita encontrada"]); 
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
         }
     }
 
-    public function create() {
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        // if (empty($data['titulo']) || empty($data['categoria']) || empty($data['ingredientes']) || empty($data['descricao']) || empty($data['modo_preparo']) ) {
-        //     echo json_encode(["error" => "Todos os campos são obrigatórios"]);
-        //     return;
-        // }
-
-        $usuario_id = 1; 
-
-        $receita = new Receita(
-            $usuario_id,
-            $data['titulo'],
-            $data['ingredientes'],
-            $data['descricao'],
-            $data['modo_preparo'],
-            $data['categoria'] ?? null
-        );
-        $receita->salvar(); 
-        echo json_encode(["message" => "Receita criada com sucesso"]);
-    }
-
-    public function show($id) {
-        $receita = Receita::find($id);
-        
-        if ($receita) {
-            echo json_encode($receita);
+    public function getById($id)
+    {
+        if (isset($id)) {
+            try {
+                $receita = $this->receita->getById($id);
+                if ($receita) {
+                    echo json_encode($receita);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Cadastro não encontrado"]);
+                }
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao buscar cadastro"]);
+            }
         } else {
-            echo json_encode(["error" => "Receita não encontrada"]);
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
         }
     }
 
-    public function update($id) {
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        $receita = Receita::find($id);
-
-        if (!$receita) {
-            echo json_encode(["error" => "Receita não encontrada"]);
-            return;
+    public function update()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (isset($data->usuario_id) && isset($data->titulo) && isset($data->ingredientes) && isset($data->descricao) && isset($data->modo_preparo) && isset($data->categoria) && isset($data->dataCriacao)) {
+            try {
+                $count = $this->receita->update($data->usuario_id, $data->titulo, $data->ingredientes, $data->descricao, $data->modo_preparo, $data->categoria, $data->dataCriacao);
+                if ($count > 0) {
+                    http_response_code(200);
+                    echo json_encode(["message" => "Cadastro atualizado com sucesso."]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(["message" => "Erro ao cadastrar receita"]);
+                }
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao atualizar cadastro"]);
+            }
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
         }
-
-        if (!empty($data['categoria'])) $receita->setCategoria($data['categoria']);
-        if (!empty($data['titulo'])) $receita->setTitulo($data['titulo']);
-        if (!empty($data['ingredientes'])) $receita->setIngredientes($data['ingredientes']);
-        if (!empty($data['descricao'])) $receita->setDescricao($data['descricao']);
-        if (!empty($data['modo_preparo'])) $receita->setModoPreparo($data['modo_preparo']);
-
-        $receita->atualizar(); 
-        echo json_encode(["message" => "Receita atualizada com sucesso"]);
     }
 
-    public function delete($id) {
-        $receita = Receita::find($id);
+    public function delete()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (isset($data->id)) {
+            try {
+                $count = $this->receita->delete($data->id);
 
-        if ($receita) {
-            $receita->deletar(); 
-            echo json_encode(["message" => "Receita excluída com sucesso"]);
+                if ($count > 0) {
+                    http_response_code(200);
+                    echo json_encode(["message" => "Cadastro deletado com sucesso."]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(["message" => "Erro ao deletar Cadastro"]);
+                }
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao deletar Cadastro"]);
+            }
         } else {
-            echo json_encode(["error" => "Receita não encontrada"]);
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
         }
     }
 }

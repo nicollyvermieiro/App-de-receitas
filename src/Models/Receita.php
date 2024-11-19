@@ -46,6 +46,15 @@ class Receita
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getByUserId($id)
+    {
+        $sql = "SELECT * FROM receitas WHERE usuario_id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function update($titulo, $categoria, $ingredientes, $descricao, $modo_preparo, $id) 
     {
         $sql = "UPDATE receitas SET titulo = :titulo, categoria = :categoria, ingredientes = :ingredientes, descricao = :descricao, modo_preparo = :modo_preparo WHERE id = :id";

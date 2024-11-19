@@ -1,68 +1,115 @@
 <?php
 
-namespace App\Controllers;
+use Vendor\AppReceitas\Config\Database;
 
-use App\Models\User;
+class UserController 
+{
+	private $user;
 
-class UserController {
-	private $userModel;
+	private static $INSTANCE;
 
-	public function __construct() {
-		$this->userModel = new User();
-	}
+    public static function getInstance(){
+        if(!isset(self::$INSTANCE)){
+            self::$INSTANCE = new UserController();
+        }
+        return self::$INSTANCE;
+    }
 
-	public function index()
+	public function __construct()
     {
-        $viewPath = __DIR__ . '/../views/user/index.php';
+        $this->user = new User(Database::getInstance());
+    }
 
-        if (file_exists($viewPath)) {
-            require $viewPath;
+	public function list()
+    {
+        $user = $this->user->list();
+        echo json_encode($user);
+    }
+
+	public function create()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (isset($data->nome) && isset($data->email) && isset($data->senha) && isset($data->dataCriacao)) {
+            try {
+                $this->user->create($data->nome, $data->email, $data->senha, $data->dataCriacao);
+
+                http_response_code(201);
+                echo json_encode(["message" => "Usuário cadastrado com sucesso"]);
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao cadastrar peça"]);
+            }
         } else {
-            echo "View não encontrada: user/index.php";
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
         }
     }
 
-	public function create() {
-		$data = json_decode(file_get_contents("php://input"), true);
-		$name = $data['name'] ?? null;
-		$email = $data['email'] ?? null;
-		$password = $data['password'] ?? null;
-
-		if ($name && $email && $password) {
-			$result = $this->userModel->create($name, $email, $password);
-			echo json_encode(["success" => $result]);
-		} else {
-			http_response_code(400);
-			echo json_encode(["error" => "Nome e email são obrigatórios."]);
-		}
-	}
-
-	public function read($id = null) {
-		if ($id === "all") {
-            $data = $this->userModel->read();
+	public function getById($id)
+    {
+        if (isset($id)) {
+            try {
+                $user = $this->user->getById($id);
+                if ($user) {
+                    echo json_encode($user);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Cadastro não encontrado"]);
+                }
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao buscar cadastro"]);
+            }
         } else {
-            $data = $this->userModel->read($id);
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
         }
-		echo json_encode($data);
-	}
+    }
 
-	public function update($id) {
-		$data = json_decode(file_get_contents("php://input"), true);
-		$name = $data['name'] ?? null;
-		$email = $data['email'] ?? null;
-		$password = $data['password'] ?? null;
+	public function update()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+		if (isset($data->nome) && isset($data->email) && isset($data->senha) && isset($data->dataCriacao)) {
+            try {
+                $count = $this->user->update($data->nome, $data->email, $data->senha, $data->dataCriacao);
+                if ($count > 0) {
+                    http_response_code(200);
+                    echo json_encode(["message" => "Cadastro atualizado com sucesso."]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(["message" => "Erro ao cadastrar usuario"]);
+                }
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao atualizar cadastro"]);
+            }
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
+        }
+    }
 
-		if ($name && $email) {
-			$result = $this->userModel->update($id, $name, $email, $password);
-			echo json_encode(["success" => $result, "message" => $result ? "Usuário atualizado com sucesso." : "Falha ao atualizar usuário."]);
-		} else {
-			http_response_code(400);
-			echo json_encode(["error" => "Nome e email são obrigatórios."]);
-		}
-	}
+	public function delete()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (isset($data->id)) {
+            try {
+                $count = $this->user->delete($data->id);
 
-	public function delete($id) {
-		$result = $this->userModel->delete($id);
-		echo json_encode(["success" => $result, "message" => $result ? "Usuário deletado com sucesso." : "Falha ao deletar usuário."]);
-	}
+                if ($count > 0) {
+                    http_response_code(200);
+                    echo json_encode(["message" => "Cadastro deletado com sucesso."]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(["message" => "Erro ao deletar Cadastro"]);
+                }
+            } catch (\Throwable $th) {
+                http_response_code(500);
+                echo json_encode(["message" => "Erro ao deletar Cadastro"]);
+            }
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "Dados incompletos."]);
+        }
+    }
 }
