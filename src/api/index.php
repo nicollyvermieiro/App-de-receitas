@@ -1,18 +1,14 @@
 <?php
 
 use Vendor\AppReceitas\api\Router;
-use Vendor\AppReceitas\Controllers\LoginController;
 use Vendor\AppReceitas\Controllers\ReceitaController;
 use Vendor\AppReceitas\Controllers\UserController;
 
-require_once __DIR__ . '/vendor/autoload.php'; 
 
-
-require_once '../App-de-receitas/src/config/db.php'; 
-require_once '../App-de-receitas/src/api/Router.php';
-require_once '../App-de-receitas/src/Controllers/ReceitaController.php';
-require_once '../App-de-receitas/src/Controllers/UserController.php';
-require_once '../App-de-receitas/src/Controllers/LoginController.php';
+require_once '../config/db.php'; 
+require_once '../Router.php';
+require_once '../Controllers/ReceitaController.php';
+require_once '../Controllers/UserController.php';
 
 $router = Router::getInstance();
 
