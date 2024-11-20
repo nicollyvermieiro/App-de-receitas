@@ -2,8 +2,10 @@
 
 namespace Vendor\AppReceitas\Controllers;
 
-use Vendor\AppReceitas\Config\Database;
+use Vendor\AppReceitas\Config\DB;
 use Vendor\AppReceitas\Models\User;
+
+require_once __DIR__ . '/../Models/User.php'; 
 
 class UserController 
 {
@@ -20,7 +22,7 @@ class UserController
 
 	public function __construct()
     {
-        $this->user = new User(Database::getInstance());
+        $this->user = new User(DB::getInstance());
     }
 
 	public function list()
@@ -32,9 +34,9 @@ class UserController
 	public function create()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (isset($data->nome) && isset($data->email) && isset($data->senha) && isset($data->dataCriacao)) {
+        if (isset($data->name) && isset($data->email) && isset($data->password)) {
             try {
-                $this->user->create($data->nome, $data->email, $data->senha, $data->dataCriacao);
+                $this->user->create($data->name, $data->email, $data->password);
 
                 http_response_code(201);
                 echo json_encode(["message" => "Usuário cadastrado com sucesso"]);
@@ -72,9 +74,9 @@ class UserController
 	public function update()
     {
         $data = json_decode(file_get_contents("php://input"));
-		if (isset($data->nome) && isset($data->email) && isset($data->senha) && isset($data->dataCriacao)) {
+		if (isset($data->name) && isset($data->email) && isset($data->password)) {
             try {
-                $count = $this->user->update($data->nome, $data->email, $data->senha, $data->dataCriacao);
+                $count = $this->user->update($data->name, $data->email, $data->password);
                 if ($count > 0) {
                     http_response_code(200);
                     echo json_encode(["message" => "Cadastro atualizado com sucesso."]);

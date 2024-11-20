@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Receitas</title>
+    <link rel="stylesheet" href="stylereceitas.css">
+    <script src="scriptreceita.js"></script>
+    
+</head>
+
+<body onload="onUpdate()">
+    <div class="sidebar">
+        <h2>Gerenciamento</h2>
+        <a href="index.html"><i class="bi bi-house-door"></i> Início</a>
+        <a href="cadastrousuarios.html"><i class="bi bi-book"></i> Usuários</a>
+        <a href="viewReceitas.html"><i class="bi bi-book"></i> Visualizar receitas</a>
+    </div>
+
+    <div class="container">
+      <header>
+          <h1>Cadastrar Nova Receita</h1>
+      </header>
+      <main>
+        <form>
+         
+        <label for="categoria">Categoria</label>
+        <select id="categoria" required>
+        <option value="Selecione aqui...">Selecione aqui...</option>
+            <option value="Sobremesa">Sobremesa</option>
+            <option value="Prato Principal">Prato Principal</option>
+            <option value="Entrada">Entrada</option>
+            <option value="Bebida">Bebida</option>
+            <option value="Lanche">Lanche</option>
+            <option value="Petiscos">Petiscos</option>
+            <option value="Outros">Outros</option>
+        </select>
+        <input type="text" placeholder="Digite a categoria">
+
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" placeholder="Ex: Bolo de cenoura" required>
+        
+        <label for="ingredientes">Ingredientes:</label>
+        <input type="text" id="ingredientes" placeholder="Ex: 2 ovos, 1/2 xícara de óleo..." required>
+        
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" placeholder="Bolo fofinho..." required></textarea>
+        
+        <label for="modo_preparo">Modo de preparo:</label>
+        <input type="text" id="modo_preparo" placeholder="Ex: Misture o trigo e os ovos..." required>
+
+        <label for="usuarioId">ID do usuario:</label>
+        <input type="number" id="usuarioId" placeholder="Ex: 1" required>
+  
+        <button onclick="detectType()">Salvar Receita</button>
+        </form>
+      </main>
+    </div>
+<body>
+</html>

@@ -17,18 +17,17 @@ class Receita
     }
     
 
-    public function create($usuario_id, $categoria, $titulo, $ingredientes, $descricao, $modo_preparo, $dataCriacao) 
+    public function create($category, $title, $ingredients, $description, $preparation_mode, $user_id) 
     {
-        $sql = "INSERT INTO receitas (usuario_id, categoria, titulo, ingredientes, descricao, modo_preparo, data_criacao) 
-                            VALUES (:usuario_id, :categoria, :titulo, :ingredientes, :descricao, :modo_preparo, :dataCriacao)";
+        $sql = "INSERT INTO receitas (category, title, ingredients, description, preparation_mode, user_id) 
+                            VALUES (:category, :title, :ingredients, :description, :preparation_mode, :user_id)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':usuario_id', $usuario_id);
-        $stmt->bindParam(':categoria', $categoria);
-        $stmt->bindParam(':titulo', $titulo);
-        $stmt->bindParam(':ingredientes', $ingredientes);
-        $stmt->bindParam(':descricao', $descricao);
-        $stmt->bindParam(':modo_preparo', $modo_preparo);
-        $stmt->bindParam(':dataCriacao', $dataCriacao);
+        $stmt->bindParam(':category', $category);
+        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':ingredients', $ingredients);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':preparation_mode', $preparation_mode);
+        $stmt->bindParam(':user_id', $user_id);
         return $stmt->execute();
     }
 
@@ -51,22 +50,22 @@ class Receita
 
     public function getByUserId($id)
     {
-        $sql = "SELECT * FROM receitas WHERE usuario_id = :id";
+        $sql = "SELECT * FROM receitas WHERE user_id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function update($titulo, $categoria, $ingredientes, $descricao, $modo_preparo, $id) 
+    public function update($title, $category, $ingredients, $description, $preparation_mode, $id) 
     {
-        $sql = "UPDATE receitas SET titulo = :titulo, categoria = :categoria, ingredientes = :ingredientes, descricao = :descricao, modo_preparo = :modo_preparo WHERE id = :id";
+        $sql = "UPDATE receitas SET title = :title, category = :category, ingredients = :ingredients, description = :description, preparation_mode = :preparation_mode WHERE id = :id";
         $stmt = $this->conn->prepare($sql); 
-        $stmt->bindParam(':titulo', $titulo);
-        $stmt->bindParam(':categoria', $categoria);
-        $stmt->bindParam(':ingredientes', $ingredientes);
-        $stmt->bindParam(':descricao', $descricao); 
-        $stmt->bindParam(':modo_preparo', $modo_preparo); 
+        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':category', $category);
+        $stmt->bindParam(':ingredients', $ingredients);
+        $stmt->bindParam(':description', $description); 
+        $stmt->bindParam(':preparation_mode', $preparation_mode); 
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }

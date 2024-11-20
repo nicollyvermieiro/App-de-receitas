@@ -2,7 +2,8 @@
 
 namespace Vendor\AppReceitas\Models;
 
-require_once '../config/db.php';
+require_once __DIR__ . '/../config/db.php';  
+
 
 use PDO;
 
@@ -15,14 +16,13 @@ class User
         $this->conn = $db;
     }
 
-    public function create($nome, $email, $senha, $dataCriacao) {
+    public function create($nome, $email, $senha) {
         $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
-        $sql = "INSERT INTO usuarios (nome, email, senha, dataCriacao) VALUES (:nome, :email, :senha, :dataCriacao)";
+        $sql = "INSERT INTO usuarios (nome, email, senha) VALUES (:nome, :email, :senha)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':senha', $senhaHash);
-        $stmt->bindParam(':dataCriacao', $dataCriacao);
         return $stmt->execute();
     }
     

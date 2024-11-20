@@ -1,0 +1,179 @@
+        /* Corpo e barra lateral */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8c8d8; 
+            padding-top: 20px;
+            padding-left: 15px;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 1.8rem;
+            color: #d81b60; 
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            font-size: 1.2rem;
+            color: #5e5e5e;
+            padding: 10px 15px;
+            text-decoration: none;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #d81b60;
+            color: white;
+        }
+
+        /* Conteúdo principal */
+        .container {
+            margin-left: 270px;
+            padding: 40px;
+        }
+
+        .container h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: #d81b60;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* Formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        /* Labels */
+        form label {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Inputs */
+        form input,
+        form textarea {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        form input:focus,
+        form textarea:focus {
+            border-color: #d81b60;
+            outline: none;
+        }
+
+        /* Estilo para Textarea */
+        form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Botão de Envio */
+        form button {
+            background-color: #d81b60;
+            color: #333;
+            border: none;
+            padding: 14px 28px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        form button:hover {
+            background-color: #d81b60;
+            transform: translateY(-3px);
+        }
+
+        /* Botões no Cabeçalho */
+        header button {
+            background-color: #fff;
+            color: #d81b60;
+            border: 2px solid #d81b60;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            transition: all 0.3s ease;
+        }
+
+        header button:hover {
+            background-color: #d81b60;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+        
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+
+            form label {
+                font-size: 16px;
+            }
+
+            form input,
+            form textarea {
+                width: 100%;
+            }
+
+            form button {
+                width: 100%;
+            }
+        }
+        

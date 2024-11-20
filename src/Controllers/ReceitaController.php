@@ -3,7 +3,7 @@
 namespace Vendor\AppReceitas\Controllers;
 
 use SebastianBergmann\Environment\Console;
-use Vendor\AppReceitas\Config\Database;
+use Vendor\AppReceitas\Config\DB;
 use Vendor\AppReceitas\Models\Receita;
 
 class ReceitaController 
@@ -21,7 +21,7 @@ class ReceitaController
 
     public function __construct()
     {
-        $this->receita = new Receita(Database::getInstance());
+        $this->receita = new Receita(DB::getInstance());
     }
 
     public function list()
@@ -33,9 +33,9 @@ class ReceitaController
     public function create() 
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (isset($data->usuario_id) && isset($data->titulo) && isset($data->ingredientes) && isset($data->descricao) && isset($data->modo_preparo) && isset($data->categoria) && isset($data->dataCriacao)) {
+        if (isset($data->title) && isset($data->ingredients) && isset($data->description) && isset($data->preparation_mode) && isset($data->categoria) && isset($data->user_id)) {
             try {
-                $this->receita->create($data->usuario_id, $data->titulo, $data->ingredientes, $data->descricao, $data->modo_preparo, $data->categoria, $data->dataCriacao);
+                $this->receita->create(   $data->category,$data->title, $data->ingredients,$data->description, $data->preparation_mode,  $data->user_id,);
 
                 http_response_code(201);
                 echo json_encode(["message" => "Receita cadastrada com sucesso"]);
@@ -94,9 +94,9 @@ class ReceitaController
     public function update()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (isset($data->usuario_id) && isset($data->titulo) && isset($data->ingredientes) && isset($data->descricao) && isset($data->modo_preparo) && isset($data->categoria) && isset($data->dataCriacao)) {
+        if (isset($data->title) && isset($data->ingredients) && isset($data->description) && isset($data->preparation_mode) && isset($data->categoria) && isset($data->user_id)) {
             try {
-                $count = $this->receita->update($data->usuario_id, $data->titulo, $data->ingredientes, $data->descricao, $data->modo_preparo, $data->categoria, $data->dataCriacao);
+                $count = $this->receita->update( $data->title, $data->ingredients, $data->description, $data->preparation_mode, $data->categoria, $data->user_id);
                 if ($count > 0) {
                     http_response_code(200);
                     echo json_encode(["message" => "Cadastro atualizado com sucesso."]);
