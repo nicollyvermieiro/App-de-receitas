@@ -61,10 +61,10 @@ class Receita
 
     public function update($title, $category, $ingredients, $description, $preparation_mode, $id) 
     {
-        $sql = "UPDATE receitas SET title = :title, category = :category, ingredients = :ingredients, description = :description, preparation_mode = :preparation_mode WHERE id = :id";
+        $sql = "UPDATE receitas SET category = :category, title = :title, ingredients = :ingredients, description = :description, preparation_mode = :preparation_mode WHERE id = :id";
         $stmt = $this->conn->prepare($sql); 
-        $stmt->bindParam(':title', $title);
         $stmt->bindParam(':category', $category);
+        $stmt->bindParam(':title', $title);
         $stmt->bindParam(':ingredients', $ingredients);
         $stmt->bindParam(':description', $description); 
         $stmt->bindParam(':preparation_mode', $preparation_mode); 
@@ -78,6 +78,9 @@ class Receita
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $stmt->rowCount();
+        
+        // Retorna true se pelo menos uma linha foi afetada (ou seja, se a receita foi excluída)
+        return $stmt->rowCount() > 0;
     }
+
 }
