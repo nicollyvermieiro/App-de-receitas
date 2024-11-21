@@ -91,10 +91,10 @@
             public function testDelete()
             {
                 // Excluir usuário
-                $result = $this->user->delete(64);
+                $result = $this->user->delete(62);
                 
                 // Verificar se o usuário foi realmente excluído
-                $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE id = 64");
+                $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE id = 62");
                 $stmt->execute();
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 

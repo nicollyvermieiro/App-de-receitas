@@ -1,10 +1,10 @@
 <?php
-require_once 'src/Config/DB.php'; 
+require_once 'src/Config/db.php'; 
 
-use Vendor\AppReceitas\Config\DB;
+use Vendor\AppReceitas\Config\db;
 
 try {
-    $conexao = DB::getConnection();
+    $conexao = db::getInstance();
     echo "Conexão bem-sucedida!";
 } catch (PDOException $e) {
     echo "Erro na conexão: " . $e->getMessage();
