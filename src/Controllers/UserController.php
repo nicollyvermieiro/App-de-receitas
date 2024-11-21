@@ -2,7 +2,7 @@
 
 namespace Vendor\AppReceitas\Controllers;
 
-use Vendor\AppReceitas\Config\DB;
+use Vendor\AppReceitas\Config\db;
 use Vendor\AppReceitas\Models\User;
 
 require_once __DIR__ . '/../Models/User.php'; 
@@ -22,7 +22,7 @@ class UserController
 
 	public function __construct()
     {
-        $this->user = new User(DB::getInstance());
+        $this->user = new User(db::getInstance());
     }
 
 	public function list()
@@ -42,7 +42,7 @@ class UserController
                 echo json_encode(["message" => "Usuário cadastrado com sucesso"]);
             } catch (\Throwable $th) {
                 http_response_code(500);
-                echo json_encode(["message" => "Erro ao cadastrar peça"]);
+                echo json_encode(["message" => "Erro ao cadastrar usuario"]);
             }
         } else {
             http_response_code(400);
@@ -74,9 +74,9 @@ class UserController
 	public function update()
     {
         $data = json_decode(file_get_contents("php://input"));
-		if (isset($data->name) && isset($data->email) && isset($data->password)) {
+		if (isset($data->name) && isset($data->email) && isset($data->id)) {
             try {
-                $count = $this->user->update($data->name, $data->email, $data->password);
+                $count = $this->user->update( $data->id, $data->name, $data->email);
                 if ($count > 0) {
                     http_response_code(200);
                     echo json_encode(["message" => "Cadastro atualizado com sucesso."]);

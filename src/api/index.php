@@ -10,6 +10,18 @@ require_once '../Router.php';
 require_once '../Controllers/ReceitaController.php';
 require_once '../Controllers/UserController.php';
 
+// Configuração CORS
+header("Access-Control-Allow-Origin: *"); // Permite todas as origens
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Permite os métodos HTTP necessários
+header("Access-Control-Allow-Headers: Content-Type"); // Permite o cabeçalho Content-Type
+
+// Para lidar com a requisição de "preflight" (opções)
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
 $router = Router::getInstance();
 
 // Rotas de Usuários

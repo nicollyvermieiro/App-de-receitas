@@ -4,7 +4,7 @@ namespace Vendor\AppReceitas\Config;
 use PDO;
 use PDOException;
 
-class DB {
+class db {
 
     static $host = 'localhost';
     static $dbname = 'receitas';

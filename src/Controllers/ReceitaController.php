@@ -3,9 +3,12 @@
 namespace Vendor\AppReceitas\Controllers;
 
 use SebastianBergmann\Environment\Console;
-use Vendor\AppReceitas\Config\DB;
+use Vendor\AppReceitas\Config\db;
 use Vendor\AppReceitas\Models\Receita;
 
+use PDO;
+
+require_once __DIR__ . '/../Models/Receita.php'; 
 class ReceitaController 
 {
     private $receita;
@@ -21,7 +24,7 @@ class ReceitaController
 
     public function __construct()
     {
-        $this->receita = new Receita(DB::getInstance());
+        $this->receita = new Receita(db::getInstance());
     }
 
     public function list()
@@ -33,9 +36,9 @@ class ReceitaController
     public function create() 
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (isset($data->title) && isset($data->ingredients) && isset($data->description) && isset($data->preparation_mode) && isset($data->categoria) && isset($data->user_id)) {
+        if (isset($data->title) && isset($data->ingredients) && isset($data->description) && isset($data->preparation_mode) && isset($data->category) && isset($data->user_id)) {
             try {
-                $this->receita->create(   $data->category,$data->title, $data->ingredients,$data->description, $data->preparation_mode,  $data->user_id,);
+                $this->receita->create(   $data->category,$data->title, $data->ingredients,$data->description, $data->preparation_mode,  $data->user_id);
 
                 http_response_code(201);
                 echo json_encode(["message" => "Receita cadastrada com sucesso"]);
@@ -51,24 +54,27 @@ class ReceitaController
 
     public function getById($id)
     {
-        if (isset($id)) {
-            try {
-                $receita = $this->receita->getById($id);
-                if ($receita) {
-                    echo json_encode($receita);
-                } else {
-                    http_response_code(404);
-                    echo json_encode(["message" => "Cadastro não encontrado"]);
-                }
-            } catch (\Throwable $th) {
-                http_response_code(500);
-                echo json_encode(["message" => "Erro ao buscar cadastro"]);
-            }
-        } else {
+        if (!isset($id)) {
             http_response_code(400);
-            echo json_encode(["message" => "Dados incompletos."]);
+            echo json_encode(["message" => "ID não fornecido."]);
+            return;
+        }
+
+        try {
+            $receita = $this->receita->getById($id);
+            if ($receita) {
+                http_response_code(200);
+                echo json_encode($receita);
+            } else {
+                http_response_code(404);
+                echo json_encode(["message" => "Receita não encontrada."]);
+            }
+        } catch (\Throwable $th) {
+            http_response_code(500);
+            echo json_encode(["message" => "Erro interno ao buscar receita.", "error" => $th->getMessage()]);
         }
     }
+
 
     public function getByUserId($id)
     {
@@ -94,9 +100,9 @@ class ReceitaController
     public function update()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (isset($data->title) && isset($data->ingredients) && isset($data->description) && isset($data->preparation_mode) && isset($data->categoria) && isset($data->user_id)) {
+        if (isset($data->id) && isset($data->title) && isset($data->ingredients) && isset($data->description) && isset($data->preparation_mode) && isset($data->category)) {
             try {
-                $count = $this->receita->update( $data->title, $data->ingredients, $data->description, $data->preparation_mode, $data->categoria, $data->user_id);
+                $count = $this->receita->update( $data->title, $data->category, $data->ingredients, $data->description, $data->preparation_mode, $data->id);
                 if ($count > 0) {
                     http_response_code(200);
                     echo json_encode(["message" => "Cadastro atualizado com sucesso."]);

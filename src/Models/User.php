@@ -16,13 +16,13 @@ class User
         $this->conn = $db;
     }
 
-    public function create($nome, $email, $senha) {
-        $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
-        $sql = "INSERT INTO usuarios (nome, email, senha) VALUES (:nome, :email, :senha)";
+    public function create($name, $email, $password) {
+        $senhaHash = password_hash($password, PASSWORD_BCRYPT);
+        $sql = "INSERT INTO usuarios (name, email, password) VALUES (:name, :email, :password)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':name', $name);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':senha', $senhaHash);
+        $stmt->bindParam(':password', $senhaHash);
         return $stmt->execute();
     }
     
@@ -54,13 +54,12 @@ class User
     }
 
 
-    public function update($id, $nome, $email, $senha) {
-        $sql = "UPDATE usuarios SET nome = :nome, email = :email, senha = :senha WHERE id = :id";
+    public function update($id, $name, $email) {
+        $sql = "UPDATE usuarios SET name = :name, email = :email WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':name', $name);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':senha', $senha);
         return $stmt->execute();
     }
 

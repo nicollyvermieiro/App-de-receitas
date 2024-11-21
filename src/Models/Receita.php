@@ -2,9 +2,10 @@
 
 namespace Vendor\AppReceitas\Models;
 
+require_once __DIR__ . '/../config/db.php';  
+
 use PDO;
 
-require_once '../config/db.php';
 
 class Receita 
 {
@@ -30,6 +31,7 @@ class Receita
         $stmt->bindParam(':user_id', $user_id);
         return $stmt->execute();
     }
+    
 
     public function list()
     {
@@ -67,7 +69,7 @@ class Receita
         $stmt->bindParam(':description', $description); 
         $stmt->bindParam(':preparation_mode', $preparation_mode); 
         $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     public function delete($id)
