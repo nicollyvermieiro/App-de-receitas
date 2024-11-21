@@ -3,7 +3,7 @@
 ## Endpoints de Usuários
 
 ### 1. Listar Todos os Usuários
-- **URL:** `/api/usuarios`
+- **URL:** `http://localhost:8000/src/api/user`
 - **Método:** `GET`
 - **Descrição:** Retorna uma lista de todos os usuários cadastrados.
 - **Resposta de Sucesso:**
@@ -11,36 +11,36 @@
   [
       {
           "id": 1,
-          "nome": "João",
+          "name": "João",
           "email": "joao@example.com",
-          "dataCriacao": "2024-11-07 15:00:00"
+          "date": "2024-11-07 15:00:00"
       },
       {
           "id": 2,
-          "nome": "Maria",
+          "name": "Maria",
           "email": "maria@example.com",
-          "dataCriacao": "2024-11-07 16:00:00"
+          "date": "2024-11-07 16:00:00"
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-          "error": "Nenhum usuário encontrado"
+          "error": "Cadastro não encontrado"
       }
   ]
 
 ### 2. Criar Usuário
-- **URL:** `/api/usuarios`
+- **URL:** `http://localhost:8000/src/api/user`
 - **Método:** `POST`
 - **Descrição:** Cria um novo usuário com nome, email e senha.
 - **Dados de Entrada:**
   ```json
   [ 
       {
-           "nome": "Carlos",
+           "name": "Carlos",
            "email": "carlos@example.com",
-           "senha": "senha123"
+           "password": "senha123"
       }
   ]
 
@@ -48,85 +48,52 @@
   ```json
   [
       {
-           "message": "Usuário criado com sucesso"
+           "message": "Usuário cadastrado com sucesso"
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Todos os campos são obrigatórios"
-      }
-  ]
-
-### 3. Login de Usuário
-- **URL:** `/api/usuarios/login`
-- **Método:** `POST`
-- **Descrição:** Realiza o login de um usuário com email e senha.
-- **Dados de Entrada:**
-  ```json
-  [ 
-      {
-           "email": "joao@example.com",
-           "senha": "senha123"
-      }
-  ]
-
-- **Resposta de Sucesso:**
-  ```json
-  [
-      {
-            "message": "Login bem-sucedido",
-            "user": {
-                "id": 1,
-                "nome": "João",
-                "email": "joao@example.com",
-                "dataCriacao": "2024-11-07 15:00:00"
-            }
-      }
-  ]
-- **Resposta de Erro:**
-  ```json
-  [
-      {
-           "error": "Email ou senha inválidos"
+          "error": "Erro ao cadastrar usuario", 
+          "error": "Dados incompletos."
       }
   ]
 
 
 ### 4. Visualizar Usuário
-- **URL:** `/api/usuarios/{id}`
+- **URL:** ``http://localhost:8000/src/api/user?id=${id}`
 - **Método:** `GET`
 - **Descrição:** Retorna os dados de um usuário específico pelo ID.
 - **Resposta de Sucesso:**
   ```json
   [
       {
-           "id": 1,
-           "nome": "João",
-           "email": "joao@example.com",
-           "dataCriacao": "2024-11-07 15:00:00"
+          "id": 1,
+          "name": "João",
+          "email": "joao@example.com",
+          "date": "2024-11-07 15:00:00"
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Usuário não encontrado"
+           "error": "Cadastro não encontrado"
       }
   ]
 
 ### 5. Atualizar Usuário
-- **URL:** `/api/usuarios/{id}`
+- **URL:** `http://localhost:8000/src/api/user`
 - **Método:** `PUT`
 - **Descrição:** Atualiza os dados de um usuário existente.
 - **Dados de Entrada:**
   ```json
   [ 
       {
-           "nome": "João da Silva",
-           "email": "joao.silva@example.com",
-           "senha": "novasenha123"
+          "name": "João da Silva",
+          "email": "joao.silva@example.com",
+          "password": "novasenha123"
       }
   ]
 
@@ -134,34 +101,42 @@
   ```json
   [
       {
-            "message": "Usuário atualizado com sucesso"
+            "message": "Cadastro atualizado com sucesso"
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Usuário não encontrado"
+           "error": "Erro ao atualizar cadastro"
       }
   ]
 
 
 ### 6. Excluir Usuário
-- **URL:** `/api/usuarios/{id}`
+- **URL:** `http://localhost:8000/src/api/user`
 - **Método:** `DELETE`
 - **Descrição:** Exclui um usuário específico pelo ID.
+- **Dados de Entrada:**
+  ```json
+  [ 
+      {
+        "id": 2
+      }
+  ]
+
 - **Resposta de Sucesso:**
   ```json
   [
       {
-           "message": "Usuário excluído com sucesso"
+           "message": "Cadastro deletado com sucesso."
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Usuário não encontrado"
+           "error": "Erro ao deletar Cadastro"
       }
   ]
 
@@ -169,7 +144,7 @@
 ## Endpoints de Receitas
 
 ### 1. Listar Todas as Receitas
-- **URL:** `/api/receitas`
+- **URL:** `http://localhost:8000/src/api/receita`
 - **Método:** `GET`
 - **Descrição:** Retorna uma lista de todas as receitas cadastradas.
 - **Resposta de Sucesso:**
@@ -177,74 +152,83 @@
   [
       {
         "id": 1,
-        "titulo": "Bolo de Chocolate",
-        "descricao": "Um delicioso bolo de chocolate...",
-        "ingredientes": ["farinha", "açúcar", "chocolate"],
-        "modo_preparo": "Misture tudo e asse...",
-        "dataCriacao": "2024-11-07 15:00:00"
+        "category": "Sobremesa",
+        "title": "Bolo de Chocolate",        
+        "ingredients": ["farinha", "açúcar", "chocolate"],
+        "description": "Um delicioso bolo de chocolate...",
+        "preparation_mode": "Misture tudo e asse...",
+        "user_id": 1,
+        "date": "2024-11-07 15:00:00"
     },
     {
-        "id": 2,
-        "titulo": "Macarrão ao Alho e Óleo",
-        "descricao": "Uma receita rápida e saborosa...",
-        "ingredientes": ["macarrão", "alho", "azeite"],
-        "modo_preparo": "Cozinhe o macarrão e refogue o alho...",
-        "dataCriacao": "2024-11-07 16:00:00"
+         "id": 2,
+        "category": "Prato principal",
+        "title": "Macarrão ao Alho e Óleo",        
+        "ingredients": ["macarrão", "alho", "azeite"],
+        "description": "Uma receita rápida e saborosa...",
+        "preparation_mode": "Cozinhe o macarrão e refogue o alho...",
+        "user_id": 2,
+        "date": "2024-11-07 16:00:00"
     }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Nenhuma receita encontrada"
+           "error": "Receita não encontrada."
       }
   ]
 
 ### 2. Criar Receitas
-- **URL:** `/api/receitas`
+- **URL:** `http://localhost:8000/src/api/receita`
 - **Método:** `POST`
 - **Descrição:** Cria uma nova receita com título, descrição, ingredientes e modo de preparo.
 - **Dados de Entrada:**
   ```json
   [ 
       {
-          "titulo": "Pizza de Calabresa",
-          "descricao": "Uma pizza caseira deliciosa.",
-          "ingredientes": ["farinha", "queijo", "calabresa", "molho"],
-          "modo_preparo": "Prepare a massa, acrescente os ingredientes...",
-          "dataCriacao": "2024-11-07 17:00:00"
+          "category": "Lanche",
+          "title": "Pizza de Calabresa",          
+          "ingredients": ["farinha", "queijo", "calabresa", "molho"],
+          "description": "Uma pizza caseira deliciosa.",
+          "preparation_mode": "Prepare a massa, acrescente os ingredientes...",
+          "user_id": 1,
+          "date": "2024-11-07 17:00:00"
       }
   ]
 - **Resposta de Sucesso:**
   ```json
   [
       {
-           "message": "Receita criada com sucesso"
+           "message": "Receita cadastrada com sucesso"
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Todos os campos são obrigatórios"
+        "error": "Erro ao cadastrar receita",
+        "error": "Dados incompletos."
       }
   ]
 
 
 ### 3. Visualizar Receitas
-- **URL:** `/api/receitas/{id}`
+- **URL:** `http://localhost:8000/src/api/receita?id=${id}`
 - **Método:** `GET`
 - **Descrição:** Retorna os dados de uma receita específica pelo ID.
 - **Resposta de Sucesso:**
   ```json
   [
       {
-         "id": 1,
-         "titulo": "Bolo de Chocolate",
-         "descricao": "Um delicioso bolo de chocolate...",
-         "ingredientes": ["farinha", "açúcar", "chocolate"],
-         "modo_preparo": "Misture tudo e asse...",
-         "dataCriacao": "2024-11-07 15:00:00"
+        "id": 1,
+        "category": "Sobremesa",
+        "title": "Bolo de Chocolate",        
+        "ingredients": ["farinha", "açúcar", "chocolate"],
+        "description": "Um delicioso bolo de chocolate...",
+        "preparation_mode": "Misture tudo e asse...",
+        "user_id": 1,
+        "date": "2024-11-07 15:00:00"
       }
   ]
 - **Resposta de Erro:**
@@ -258,51 +242,62 @@
 
 
 ### 4. Atualizar Receitas
-- **URL:** `/api/receitas/{id}`
+- **URL:** `http://localhost:8000/src/api/receita`
 - **Método:** `PUT`
 - **Descrição:** Atualiza os dados de uma receita existente.
 - **Dados de Entrada:**
   ```json
   [ 
       {
-          "titulo": "Bolo de Chocolate com Morango",
-          "descricao": "Bolo de chocolate com morangos frescos.",
-          "ingredientes": ["farinha", "chocolate", "morango"],
-          "modo_preparo": "Prepare a massa e decore com morangos.",
-          "dataCriacao": "2024-11-07 18:00:00"
+        "id": 1,
+        "category": "Petisco",
+        "title": "Bolo de Chocolate",        
+        "ingredients": ["farinha", "açúcar", "chocolate"],
+        "description": "Um delicioso bolo de chocolate...",
+        "preparation_mode": "Misture tudo e asse...",
+        "user_id": 1
       }
   ]
 - **Resposta de Sucesso:**
   ```json
   [
       {
-           "message": "Receita atualizada com sucesso"
+           "message": "Cadastro atualizado com sucesso"
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Receita não encontrada"
+        "error": "Erro ao atualizar cadastro",
+        "error": "Dados incompletos."
       }
   ]
 
 
 ### 5. Excluir Receitas
-- **URL:** `/api/receitas/{id}`
+- **URL:** ``http://localhost:8000/src/api/receita`
 - **Método:** `DELETE`
 - **Descrição:** Exclui uma receita específica pelo ID.
+- **Dados de Entrada:**
+  ```json
+  [ 
+      {
+        "id": 2
+      }
+  ]
 - **Resposta de Sucesso:**
   ```json
   [
       {
-         "message": "Receita excluída com sucesso"
+         "message": "Cadastro deletado com sucesso"
       }
   ]
 - **Resposta de Erro:**
   ```json
   [
       {
-           "error": "Receita não encontrada"
+          "error": "Erro ao deletar Cadastro",
+          "error": "Dados incompletos."
       }
   ]
